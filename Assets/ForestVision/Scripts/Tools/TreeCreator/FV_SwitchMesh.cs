@@ -12,6 +12,11 @@ public class FV_SwitchMesh : EditorWindow
     int speciesVersion = 1;
     int meshVersion = 1;
     bool includeChildren = false;
+    const int foliageOptionsCount = 8;
+    const int emptyOptionsCount = 8;
+    const int leavesOptionsCount = 4;
+    const int cardOptionsCount = 4;
+    const int trunkOptionsCount = 32;
 
     public static void ShowWindow()
     {
@@ -116,6 +121,28 @@ public class FV_SwitchMesh : EditorWindow
                     if (mesh.name == newMeshName)// if we find the name of what we want to swap with in the fbx file
                         mf.sharedMesh = mesh;// swap meshes
         }
+
+        // now check to see if this is a foliage mesh, which means we also will need to update the leaves mesh child
+        if (resourceIndex == 1)
+        {
+            Debug.Log("Foliage Mesh detected! Child mesh name = " + thisGameObject.transform.GetChild(0).name);
+            MeshFilter leavesMF = thisGameObject.transform.GetChild(0).transform.GetComponent<MeshFilter>();
+            string oldLeavesMeshName;
+            string newLeavesMeshName;
+            // if this gameobject has a mesh filter assigned, handle the swap
+            if (leavesMF != null)
+            {
+                // store the name of this current mesh
+                oldLeavesMeshName = leavesMF.sharedMesh.name;
+                char currentSpeciesVersion = oldLeavesMeshName[oldLeavesMeshName.Length - 1];
+                newLeavesMeshName = leavesMF.sharedMesh.name.Remove(leavesMF.sharedMesh.name.Length - 4) + meshVersion.ToString() + "_v" + currentSpeciesVersion;
+
+                if (oldLeavesMeshName != newLeavesMeshName) // as long as the swap mesh is different, swap it
+                    foreach (Mesh mesh in fbxMeshes)// run through and find the source mesh we want to switch with
+                        if (mesh.name == newLeavesMeshName)// if we find the name of what we want to swap with in the fbx file
+                            leavesMF.sharedMesh = mesh;// swap meshes
+            }
+        }
     }
 
     private string ProcessNewName(int resourceIndex, MeshFilter meshFilter)
@@ -128,30 +155,21 @@ public class FV_SwitchMesh : EditorWindow
         string newName;
         switch (resourceIndex)
         {
-            case 1:
-                { // foliage_basic_Branch_8_v8
+            case 1:// foliage needs specific handling due to child leaves
+                {
                     newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 4) + meshVersion.ToString() + "_v" + currentSpeciesVersion;
                     //TODO: Need to handle child as well...
-                    Debug.Log(newName);
                     break;
                 }
-            case 2:
-                { // _Card_v8, _Card2_v8  _Leaves_v2, _LeavesBundle1_v3 
-                    newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 4) + meshVersion.ToString() + "_v" + currentSpeciesVersion;
-                    Debug.Log(newName);
-                    break;
-                }
-            case 3:
+            case 3:// trunk needs seperate handling due to amount of options
                 {
                     string zeroedMeshVersion = meshVersion < 10 ? "0" + meshVersion.ToString() : meshVersion.ToString();
-                    newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 11) + zeroedMeshVersion + "_trunk_v" + currentSpeciesVersion;
-                    Debug.Log(newName);
+                    newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 5) + zeroedMeshVersion + "_v" + currentSpeciesVersion;
                     break;
                 }
             default:
-                { // empty branches
+                {
                     newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 4) + meshVersion.ToString() + "_v" + currentSpeciesVersion;
-                    Debug.Log(newName);
                     break;
                 }
         }
@@ -171,11 +189,10 @@ public class FV_SwitchMesh : EditorWindow
 
         bool leavesMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_L");
         bool cardMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_C");
-
         if (leavesMesh || cardMesh)
             return 2;
 
-        bool trunkMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_T_");
+        bool trunkMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_trunk");
         if (trunkMesh)
             return 3;
 
@@ -187,22 +204,21 @@ public class FV_SwitchMesh : EditorWindow
     {
         bool foliageMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("foliage");
         if (foliageMesh)
-            return 8;
+            return foliageOptionsCount;
 
         bool leavesMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_L");
         if (leavesMesh)
-            return 4;
+            return leavesOptionsCount;
 
         bool cardMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_C");
         if (cardMesh)
-            return 5;
+            return cardOptionsCount;
 
-
-        bool trunkMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_T_");
+        bool trunkMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_trunk");
         if (trunkMesh)
-            return 32;
+            return trunkOptionsCount;
 
-        return 8;
+        return emptyOptionsCount;
 
     }
 
