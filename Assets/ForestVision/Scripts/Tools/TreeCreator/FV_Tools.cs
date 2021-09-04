@@ -9,8 +9,8 @@ public class FV_Tools : EditorWindow
 
     public static FV_Tools instance;
     private int guiSpace = 20;
-    static private string prefabPath = "Assets/ForestVision/FV_Items/Trees/";
-    static private string optimizedPath = "Assets/ForestVision/FV_Items/Optimized/";
+    //static private string prefabPath = "Assets/ForestVision/FV_Items/Trees/";
+    //static private string optimizedPath = "Assets/ForestVision/FV_Items/Optimized/";
 
 
     public static void ShowEditor()

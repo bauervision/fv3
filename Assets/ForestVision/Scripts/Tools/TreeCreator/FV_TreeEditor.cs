@@ -20,8 +20,8 @@ namespace ForestVision.FV_TreeEditor
         static private string _path = "Assets/ForestVision";
         //static private string previewPath = "Assets/ForestVision/09 Scripts/Tools/TreeCreator/Editor/Resources/Assets/Previews";
         //static private string prefabAssetPath = "Assets/ForestVision/06 Specials/MyPrefabs/SourceMeshes/";
-        static private string prefabPath = "Assets/ForestVision/06 Specials/MyPrefabs/";
-        static private string optimizedPath = "Assets/ForestVision/FV_Items/Optimized/";
+        //static private string prefabPath = "Assets/ForestVision/06 Specials/MyPrefabs/";
+        //static private string optimizedPath = "Assets/ForestVision/FV_Items/Optimized/";
 
         private List<FV_Items> _items;
         private Dictionary<FV_Items.Category, List<FV_Items>> _categorizedItems;
