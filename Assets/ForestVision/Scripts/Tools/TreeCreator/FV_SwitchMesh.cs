@@ -93,50 +93,58 @@ public class FV_SwitchMesh : EditorWindow
                 }
                 EditorGUILayout.Space();
             }
+            else
+            {
+                GUILayout.Label("No children exist for this object", EditorStyles.label);
+                EditorGUILayout.Space();
+            }
 
+            GUILayout.Label("Options", EditorStyles.boldLabel);
             // if we are selected on foliage...
             if (GetFoliageType("foliage"))
             {
-
-
-                GUILayout.Label("Foliage Options", EditorStyles.boldLabel);
+                EditorGUILayout.Space();
                 if (Selection.activeGameObject.transform.GetChild(0).GetComponent<MeshRenderer>().enabled == true)
+                {
                     removeFoliageBranch = EditorGUILayout.Toggle("Remove Foliage?", removeFoliageBranch);
+                    boostFoliageBranch = EditorGUILayout.Toggle("Increase Foliage?", boostFoliageBranch);
+                }
                 else
                     addFoliageBranch = EditorGUILayout.Toggle("Add Foliage?", addFoliageBranch);
 
-                boostFoliageBranch = EditorGUILayout.Toggle("Increase Foliage?", boostFoliageBranch);
+                EditorGUILayout.Space();
             }
-            else if (GetFoliageType("foliage2"))
+            // else if (GetFoliageType("foliage2"))
+            // {
+            //     Debug.Log("Foliage 2 selected");
+            //     EditorGUILayout.Space();
+            //     removeFoliageBranch = EditorGUILayout.Toggle("Remove Foliage?", removeFoliageBranch);
+            //     dcreaseFoliageBranch = EditorGUILayout.Toggle("Decrease Foliage?", dcreaseFoliageBranch);
+            //     EditorGUILayout.Space();
+            //     boostFoliageBranch = false;
+            //     addFoliageBranch = false;
+            // }
+            else if (GetFoliageType("_leaves"))
             {
-                removeFoliageBranch = EditorGUILayout.Toggle("Remove Foliage?", removeFoliageBranch);
-                dcreaseFoliageBranch = EditorGUILayout.Toggle("Decrease Foliage?", dcreaseFoliageBranch);
-                boostFoliageBranch = false;
-                addFoliageBranch = false;
+                EditorGUILayout.Space();
+
+                GUILayout.Label("No Options for leaves...yet", EditorStyles.label);
+                EditorGUILayout.Space();
             }
-            else if ((!GetFoliageType("_trunk")) && (!GetFoliageType("_L")) && (!GetFoliageType("_C")))
-            {
-                GUILayout.Label("Branch Options", EditorStyles.boldLabel);
-                addFoliageBranch = EditorGUILayout.Toggle("Add Foliage?", addFoliageBranch);
-
-                //boostFoliageBranch = EditorGUILayout.Toggle("Increase Foliage?", boostFoliageBranch);
-            }
-
-            GUILayout.Label("Switch Mesh Option on Selected Only", EditorStyles.boldLabel);
-            meshVersion = EditorGUILayout.IntSlider("Mesh Number", meshVersion, 1, GetFBXResourceMeshCount(Selection.activeGameObject));
-
-            // if we are selected on a trunk, handle some features for the children branches
-            if (GetFoliageType("_trunk"))
+            else if (GetFoliageType("_trunk"))
             {
                 bool TrunkHasChildren = Selection.activeGameObject.transform.childCount > 0;
                 if (hasChildren)
                 {
                     EditorGUILayout.Space();
                     GUILayout.Label("Warning: you have children attached to this trunk. Adjusting this mesh will result in the child branches no longer appearing to be attached.", EditorStyles.wordWrappedLabel);
-
                     EditorGUILayout.Space();
                 }
             }
+
+            GUILayout.Label("Switch Mesh Option on Selected Only", EditorStyles.boldLabel);
+            meshVersion = EditorGUILayout.IntSlider("Mesh Number", meshVersion, 1, GetFBXResourceMeshCount(Selection.activeGameObject));
+
 
             if (GUILayout.Button("Change Mesh Variety", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
             {
@@ -157,6 +165,7 @@ public class FV_SwitchMesh : EditorWindow
 
 
 
+    ///<summary>Check to see if the passed string matches what the meshfilter mesh name starts with. </summary>
     private bool GetFoliageType(string nameCompare)
     {
         return Selection.activeGameObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith(nameCompare);
@@ -180,13 +189,20 @@ public class FV_SwitchMesh : EditorWindow
         {
             // store the name of this current mesh
             oldMeshName = mf.sharedMesh.name;
+
             // remove the last character from the name, ie, the version number...add on the version number we want to switch to
             newMeshName = mf.sharedMesh.name.Remove(mf.sharedMesh.name.Length - 1) + speciesVersion.ToString();
 
-            if (oldMeshName != newMeshName) // as long as the swap mesh is different, swap it
-                foreach (Mesh mesh in fbxMeshes)// run through and find the source mesh we want to switch with
+
+            if (oldMeshName != newMeshName)
+            {
+                // as long as the swap mesh is different , swap it
+                foreach (Mesh mesh in fbxMeshes)
+                    // run through and find the source mesh we want to switch with
                     if (mesh.name == newMeshName)// if we find the name of what we want to swap with in the fbx file
                         mf.sharedMesh = mesh;// swap meshes
+            }
+
         }
     }
 
@@ -197,6 +213,7 @@ public class FV_SwitchMesh : EditorWindow
 
         // handle the current selection
         MeshFilter mf = thisGameObject.transform.GetComponent<MeshFilter>();
+
         string oldMeshName;
         string newMeshName;
         // if this gameobject has a mesh filter assigned, handle the swap
@@ -226,7 +243,6 @@ public class FV_SwitchMesh : EditorWindow
                 char currentSpeciesVersion = oldLeavesMeshName[oldLeavesMeshName.Length - 1];
                 newLeavesMeshName = leavesMF.sharedMesh.name.Remove(leavesMF.sharedMesh.name.Length - 4) + meshVersion.ToString() + "_v" + currentSpeciesVersion;
 
-
                 // handle whether we add the boost foliage or remove it
                 if (addFoliageBranch)
                 {
@@ -245,16 +261,23 @@ public class FV_SwitchMesh : EditorWindow
 
                 if (boostFoliageBranch)
                 {
-                    newLeavesMeshName = newLeavesMeshName.Remove(newLeavesMeshName.Length - 5) + "2_" + meshVersion.ToString() + "_v" + currentSpeciesVersion;
+                    // if we have already boosted it, just change the mesh
+                    if (newLeavesMeshName.Contains("c2_") || newLeavesMeshName.Contains("y2_") || newLeavesMeshName.Contains("n2_") || newLeavesMeshName.Contains("e2_"))
+                        newLeavesMeshName = newLeavesMeshName.Remove(newLeavesMeshName.Length - 6) + "2_" + meshVersion.ToString() + "_v" + currentSpeciesVersion;
+                    else // boost it and change the mesh
+                        newLeavesMeshName = newLeavesMeshName.Remove(newLeavesMeshName.Length - 5) + "2_" + meshVersion.ToString() + "_v" + currentSpeciesVersion;
+
+
+
                 }
                 else
                 {
                     // we dont want to boost foliage so we need to set it back to its original state
                     // but first check to see if it HAS been boosted
-                    if (newLeavesMeshName.Contains("c2_"))
+                    if (newLeavesMeshName.Contains("c2_") || newLeavesMeshName.Contains("y2_") || newLeavesMeshName.Contains("n2_") || newLeavesMeshName.Contains("e2_"))
                         newLeavesMeshName = newLeavesMeshName.Remove(newLeavesMeshName.Length - 6) + "_" + meshVersion.ToString() + "_v" + currentSpeciesVersion;
                 }
-
+                Debug.Log(newLeavesMeshName);
 
                 if (oldLeavesMeshName != newLeavesMeshName) // as long as the swap mesh is different, swap it
                     foreach (Mesh mesh in fbxMeshes)// run through and find the source mesh we want to switch with
@@ -309,7 +332,7 @@ public class FV_SwitchMesh : EditorWindow
         if (trunkMesh)
             return 2;
 
-        return 0;
+        return 0;// foliage
     }
 
     private int GetFBXResourceMeshCount(GameObject selObject)
@@ -353,6 +376,7 @@ public class FV_SwitchMesh : EditorWindow
 
     public void LoopThroughChildren(GameObject currentGameObj)
     {
+
         // we know for certain we have children at this point, so loop through them
         // and decide if we need to switch out meshes
         for (int i = 0; i < currentGameObj.transform.childCount; i++)
