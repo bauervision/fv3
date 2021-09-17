@@ -380,8 +380,6 @@ namespace ForestVision.FV_TreeEditor
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("_trunk_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-
-
         [MenuItem("GameObject/3D Object/FV/Leaves Mesh", false, 30)]
         private static void CreateLeavesBasic()
         {
@@ -395,6 +393,11 @@ namespace ForestVision.FV_TreeEditor
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("_Card_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
+        [MenuItem("GameObject/3D Object/FV/Hi Plant Mesh", false, 30)]
+        private static void CreateHiPlant()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("HP_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
 
         // =============================================================================
         #region Ground Cover
