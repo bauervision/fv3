@@ -404,6 +404,18 @@ namespace ForestVision.FV_TreeEditor
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Grasses_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
+
+        [MenuItem("GameObject/3D Object/FV/Flower Mesh", false, 30)]
+        private static void CreateFlowers()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Flowers_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+
+        [MenuItem("GameObject/3D Object/FV/Rock Mesh", false, 30)]
+        private static void CreateRocks()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Rocks_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
         // =============================================================================
         #region Ground Cover
 
