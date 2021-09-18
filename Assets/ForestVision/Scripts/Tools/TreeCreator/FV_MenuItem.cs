@@ -416,6 +416,20 @@ namespace ForestVision.FV_TreeEditor
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Rocks_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
+
+        [MenuItem("GameObject/3D Object/FV/Scatter", false, 30)]
+        private static void CreateScatter()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Scatter_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+
+        [MenuItem("GameObject/3D Object/FV/Woods Background", false, 30)]
+        private static void CreateBG()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("ThickWoods", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+
+
         // =============================================================================
         #region Ground Cover
 
