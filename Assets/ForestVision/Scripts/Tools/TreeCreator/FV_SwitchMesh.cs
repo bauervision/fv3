@@ -25,8 +25,9 @@ public class FV_SwitchMesh : EditorWindow
     const int leavesOptionsCount = 4;
     const int cardOptionsCount = 4;
     const int trunkOptionsCount = 32;
-    const int hiPlantOptionsCount = 14;
-    string[] resourceString = new string[] { "_FoliageBranches", "_BaseFoliage", "_Trunks", "_HighPlants" };
+    const int hiPlantOptionsCount = 15;
+    const int grassOptionsCount = 20;
+    string[] resourceString = new string[] { "_FoliageBranches", "_BaseFoliage", "_Trunks", "_HighPlants", "_Grasses" };
 
 
     public static void ShowWindow()
@@ -53,14 +54,14 @@ public class FV_SwitchMesh : EditorWindow
             {
 
                 // verify that we are selected on A FV Mesh before running any of the following methods
-                if (!GetFoliageType("foliage") && !GetFoliageType("_leaves") && !GetFoliageType("_trunk") && !GetFoliageType("HP"))
+                if (!isForestVisionMesh())
                 {
                     GUILayout.Label("Not a ForestVision Mesh", EditorStyles.boldLabel);
                 }
                 else
                 {
-                    // hi plants dont have species yet
-                    if (!GetFoliageType("HP"))
+                    // hi plants and grasses dont have species ...yet
+                    if (!GetFoliageType("HP") && !GetFoliageType("Grasses"))
                     {
                         int initialVersion = int.Parse(selMf.sharedMesh.name.Last().ToString());
                         GUILayout.Label("Switch Species on Selected", EditorStyles.boldLabel);
@@ -147,6 +148,12 @@ public class FV_SwitchMesh : EditorWindow
                         GUILayout.Label("High resolution Plant detected", EditorStyles.wordWrappedLabel);
                         EditorGUILayout.Space();
                     }
+                    else if (GetFoliageType("Grasses"))
+                    {
+                        EditorGUILayout.Space();
+                        GUILayout.Label("Grass Mesh detected, no species available", EditorStyles.wordWrappedLabel);
+                        EditorGUILayout.Space();
+                    }
                     else
                     {
                         GUILayout.Label("No Options for this FV Mesh...yet", EditorStyles.label);
@@ -159,8 +166,8 @@ public class FV_SwitchMesh : EditorWindow
                         GUILayout.Label("Switch Mesh Option on Selected Only", EditorStyles.boldLabel);
 
                         string initialName = Selection.activeGameObject.transform.GetComponent<MeshFilter>().sharedMesh.name;
-                        // hi res plants 
-                        if (GetFoliageType("HP"))
+                        // hi res plants and grasses
+                        if (GetFoliageType("HP") || GetFoliageType("Grasses"))
                         {
                             string zeroedMeshVersion = meshVersion < 10 ? "0" + meshVersion.ToString() : meshVersion.ToString();
                             int initialMeshVersion = int.Parse(zeroedMeshVersion);
@@ -194,6 +201,10 @@ public class FV_SwitchMesh : EditorWindow
 
     }
 
+    private bool isForestVisionMesh()
+    {
+        return (GetFoliageType("foliage") || GetFoliageType("_leaves") || GetFoliageType("_trunk") || GetFoliageType("HP") || GetFoliageType("Grasses"));
+    }
 
 
     ///<summary>Check to see if the passed string matches what the meshfilter mesh name starts with. </summary>
@@ -347,6 +358,12 @@ public class FV_SwitchMesh : EditorWindow
                     newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 2) + zeroedMeshVersion;
                     break;
                 }
+            case 4:// grasses needs seperate handling due to amount of options
+                {
+                    string zeroedMeshVersion = meshVersion < 10 ? "0" + meshVersion.ToString() : meshVersion.ToString();
+                    newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 2) + zeroedMeshVersion;
+                    break;
+                }
             default:
                 {
                     newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 4) + meshVersion.ToString() + "_v" + currentSpeciesVersion;
@@ -376,6 +393,10 @@ public class FV_SwitchMesh : EditorWindow
         if (hiPlantMesh)
             return 3;
 
+        bool grassMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Grass");
+        if (grassMesh)
+            return 4;
+
         return 0;// foliage
     }
 
@@ -397,6 +418,10 @@ public class FV_SwitchMesh : EditorWindow
         if (hiPlantMesh)
             return hiPlantOptionsCount;
 
+        bool grassMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Grasses");
+        if (grassMesh)
+            return grassOptionsCount;
+
         return foliageOptionsCount;
 
     }
@@ -416,7 +441,6 @@ public class FV_SwitchMesh : EditorWindow
 
     public void SwitchMeshVersion(int newVersion)
     {
-        Debug.Log("Mesh Version: " + newVersion);
         // run through all of the children of the current selection
         foreach (GameObject g in Selection.gameObjects)
             SwitchMesh(g, newVersion);

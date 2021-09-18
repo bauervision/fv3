@@ -399,6 +399,11 @@ namespace ForestVision.FV_TreeEditor
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("HP_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
+        [MenuItem("GameObject/3D Object/FV/Grass Mesh", false, 30)]
+        private static void CreateGrass()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Grasses_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
         // =============================================================================
         #region Ground Cover
 
