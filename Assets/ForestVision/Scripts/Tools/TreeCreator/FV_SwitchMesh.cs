@@ -17,8 +17,6 @@ public class FV_SwitchMesh : EditorWindow
     bool removeFoliageBranch = false;
     bool addFoliageBranch = false;
     bool boostFoliageBranch = false;
-    bool dcreaseFoliageBranch = false;
-    bool selectTrunkChildren = false;
 
     const int foliageSpeciesCount = 8;
     const int leavesSpeciesCount = 8;
