@@ -275,11 +275,12 @@ public class FV_SwitchMesh : EditorWindow
     private void SwitchSpecies(GameObject thisGameObject, int newSpecies)
     {
         Mesh[] fbxMeshes = GetFBXSource(thisGameObject);
-
+        int resourceIndex = GetFBXResourceID(thisGameObject);
         // handle the current selection
         MeshFilter mf = thisGameObject.transform.GetComponent<MeshFilter>();
         string oldMeshName;
         string newMeshName;
+
         // if this gameobject has a mesh filter assigned, handle the swap
         if (mf != null)
         {
@@ -298,6 +299,29 @@ public class FV_SwitchMesh : EditorWindow
                     if (mesh.name == newMeshName)// if we find the name of what we want to swap with in the fbx file
                         mf.sharedMesh = mesh;// swap meshes
             }
+
+
+
+        }
+
+        if (resourceIndex == 0 && thisGameObject.transform.childCount > 0)
+        {
+            MeshFilter leavesMF = thisGameObject.transform.GetChild(0).transform.GetComponent<MeshFilter>();
+
+            // if this gameobject has a mesh filter assigned, handle the swap
+            if (leavesMF != null)
+            {
+                // store the name of this current mesh
+                string oldLeavesMeshName = leavesMF.sharedMesh.name;
+                string newLeavesMeshName = leavesMF.sharedMesh.name.Remove(leavesMF.sharedMesh.name.Length - 1) + newSpecies.ToString();
+
+                if (oldLeavesMeshName != newLeavesMeshName) // as long as the swap mesh is different, swap it
+                    foreach (Mesh mesh in fbxMeshes)// run through and find the source mesh we want to switch with
+                        if (mesh.name == newLeavesMeshName)// if we find the name of what we want to swap with in the fbx file
+                            leavesMF.sharedMesh = mesh;// swap meshes
+            }
+
+
 
         }
     }
