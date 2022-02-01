@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using ForestVision.FV_TreeEditor;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -90,7 +91,7 @@ public class FV_Prefabber : EditorWindow
             EditorGUILayout.Space();
             if (GUILayout.Button("Save New Prefab!", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true)))
                 SavePrefab();
-            
+
 
         }
 
@@ -116,7 +117,20 @@ public class FV_Prefabber : EditorWindow
         else
             prefabPath = prefabPath + "/" + selected.name + ".prefab";
 
-        PrefabUtility.SaveAsPrefabAsset(selected, prefabPath);
+        // check to see if we need to add FV_Items
+        FV_Items fvItem = selected.GetComponent<FV_Items>();
+        // add the FV Items script
+        if (fvItem == null)
+        {
+            selected.AddComponent<FV_Items>();
+            // if we already have a setting for fv items, use it otherwsie default to tree
+            selected.GetComponent<FV_Items>().category = FV_Items.Category.Trees;
+            selected.GetComponent<FV_Items>().itemName = selected.name;
+        }
+
+
+        if (fvItem != null)
+            PrefabUtility.SaveAsPrefabAsset(selected, prefabPath);
 
     }
 

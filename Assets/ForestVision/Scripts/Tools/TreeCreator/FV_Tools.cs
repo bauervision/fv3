@@ -16,7 +16,6 @@ public class FV_Tools : EditorWindow
         instance.titleContent = new GUIContent("ForestVision Tools");
         instance.autoRepaintOnSceneChange = true;
         instance.titleContent = new GUIContent("FV Tools");
-
     }
 
     private void OnGUI()
@@ -107,8 +106,6 @@ public class FV_Tools : EditorWindow
 
         }
         GUILayout.Space(guiSpace);
-
-
 
         GUILayout.EndVertical();
 

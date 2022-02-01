@@ -10,11 +10,9 @@ namespace ForestVision.FV_TreeEditor
             Backgrounds, Branches, Flora, Ground, LowPoly, Mobile, Optimized, Specials, Trees, Trunks, Vines
         }
 
-
-
         public Category category = Category.Trunks;
         public string itemName = "";
-        //public Object inspectedScript;
+
 #endif
     }
 }

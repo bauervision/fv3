@@ -48,31 +48,7 @@ namespace ForestVision.FV_TreeEditor
             FV_Renamer.ShowWindow();
         }
 
-        [MenuItem("Tools/ForestVision/Tools/Selection/Branch Rotation", false, 30)]//access to everything
-        private static void ShowToolBranchRotation()
-        {
-            var go = Selection.activeGameObject;
-            if (go == null)
-            {
-                if (EditorUtility.DisplayDialog("Heads Up", "Gotta select something before we put a script on it", "OK"))
-                    return;
-            }
 
-            go.AddComponent<FV_BranchRotation>();
-        }
-
-        [MenuItem("Tools/ForestVision/Tools/Selection/FV Items", false, 30)]//access to everything
-        private static void ShowToolFVItems()
-        {
-            var go = Selection.activeGameObject;
-            if (go == null)
-            {
-                if (EditorUtility.DisplayDialog("Heads Up", "Gotta select something before we put a script on it", "OK"))
-                    return;
-            }
-
-            go.AddComponent<FV_Items>();
-        }
 
         [MenuItem("Tools/ForestVision/Tools/Screenshot", false, 30)]//access to everything
         private static void ShowToolScreenshot()
@@ -80,11 +56,6 @@ namespace ForestVision.FV_TreeEditor
             FV_Screenshots.ShowWindow();
         }
 
-        [MenuItem("Tools/ForestVision/Tools/Tree Tools", false, 30)]//access to everything
-        private static void ShowToolTreeTools()
-        {
-            FV_TreeTools.ShowWindow();
-        }
 
 
         [MenuItem("Tools/ForestVision/Deprecated/Browser", false, 30)]//access to everything
@@ -93,6 +64,12 @@ namespace ForestVision.FV_TreeEditor
             FV_Browser.ShowEditor();
         }
 
+
+        [MenuItem("Tools/ForestVision/Deprecated/Tree Tools", false, 30)]//access to everything
+        private static void ShowToolTreeTools()
+        {
+            FV_TreeTools.ShowWindow();
+        }
 
         #endregion
         // =============================================================================

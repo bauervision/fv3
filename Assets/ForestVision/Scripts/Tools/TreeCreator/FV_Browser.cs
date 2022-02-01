@@ -46,14 +46,14 @@ namespace ForestVision.FV_TreeEditor
             _categories = FV_edUtils.GetListFromEnum<FV_Items.Category>();
             _categoryLabels = new List<string>();
             foreach (FV_Items.Category category in _categories)
-            {
                 _categoryLabels.Add(category.ToString());
-            }
+
         }
 
         public static void InitContent()
         {
             // Set the ScrollList
+            instance._items = new List<FV_Items>();
             instance._items = FV_edUtils.GetAssetsWithScript<FV_Items>(_path);
 
             instance._categorizedItems = new Dictionary<FV_Items.Category, List<FV_Items>>();
@@ -71,11 +71,13 @@ namespace ForestVision.FV_TreeEditor
 
         private void DrawScroll()
         {
-            if (_categorizedItems[_categorySelected].Count == 0)
+
+            if (_categorizedItems?[_categorySelected].Count == 0)
             {
                 EditorGUILayout.HelpBox("This category is empty!", MessageType.Info);
                 return;
             }
+
             int rowCapacity = Mathf.FloorToInt(position.width / (ButtonWidth));
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
             int selectionGridIndex = -1;
@@ -131,6 +133,10 @@ namespace ForestVision.FV_TreeEditor
 
             EditorGUILayout.LabelField("ForestVision Asset Collection Browser", EditorStyles.boldLabel);
             EditorGUILayout.Space();
+            if (GUILayout.Button("Refresh Thumbnails", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(false)))
+            {
+                InitContent();
+            }
 
             DrawTabs();
             EditorGUILayout.HelpBox("Select an asset to add it to the scene. Newly created objects will by default be the child of anything selected. New objects will be placed at (0,0,0) of its parent object.", MessageType.None);
@@ -141,7 +147,7 @@ namespace ForestVision.FV_TreeEditor
         {
             List<GUIContent> guiContents = new List<GUIContent>();
 
-            int totalItems = _categorizedItems[_categorySelected].Count;
+            int totalItems = _categorizedItems?.Count > 0 ? _categorizedItems[_categorySelected].Count : 0;
             for (int i = 0; i < totalItems; i++)
             {
                 GUIContent guiContent = new GUIContent();
@@ -173,7 +179,7 @@ namespace ForestVision.FV_TreeEditor
             if (index != -1)
             {
                 FV_Items selectedItem = _categorizedItems[_categorySelected][index];
-                Debug.Log("GetSelectedItem: " + _categorizedItems[_categorySelected].Count);
+                //Debug.Log("GetSelectedItem: " + _categorizedItems[_categorySelected].Count);
                 GameObject obj = PrefabUtility.InstantiatePrefab(selectedItem.gameObject) as GameObject;
                 obj.name = "FV_" + selectedItem.itemName;
                 if (Selection.activeTransform != null)

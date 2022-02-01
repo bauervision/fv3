@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using ForestVision.FV_TreeEditor;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -13,7 +14,6 @@ public class FV_Collapse : EditorWindow
     private string newName = System.String.Empty;
     private string tempName = "_optimized";
     private List<GameObject> childrenOfTree = new List<GameObject>();
-    private string collapsedPath = "Assets/ForestVision/Optimized/_CollapsedMeshes";
     private string optimizedPath = "Assets/ForestVision/Optimized";
     string placeholder = string.Empty;
 
@@ -141,6 +141,7 @@ public class FV_Collapse : EditorWindow
     {
 
         GameObject selected = Selection.activeGameObject;
+        FV_Items currentFVItem = selected.GetComponent<FV_Items>();
 
         MeshRenderer[] meshRenderers = selected.GetComponentsInChildren<MeshRenderer>(false);
         int totalVertexCount = 0;
@@ -162,17 +163,14 @@ public class FV_Collapse : EditorWindow
         if (totalMeshCount == 0)
         {
             Debug.Log("No meshes found in children. There's nothing to combine.");
-
         }
         if (totalMeshCount == 1)
         {
             Debug.Log("Only 1 mesh found in children. There's nothing to combine.");
-
         }
         if (totalVertexCount > 65535)
         {
             Debug.Log("There are too many vertices to combine into 1 mesh (" + totalVertexCount + "). The max. limit is 65535");
-
         }
 
         Mesh mesh = new Mesh();
@@ -231,9 +229,9 @@ public class FV_Collapse : EditorWindow
             Mesh _mesh = new Mesh();
             string path = "";
             if (changeName)
-                path = collapsedPath + "/" + newName + ".asset";
+                path = optimizedPath + "/" + newName + ".asset";
             else
-                path = collapsedPath + "/" + selected.name + ".asset";
+                path = optimizedPath + "/" + selected.name + ".asset";
 
             AssetDatabase.CreateAsset(selected.GetComponent<MeshFilter>().sharedMesh, path);
 
@@ -248,6 +246,7 @@ public class FV_Collapse : EditorWindow
             newMeshToSave.AddComponent<MeshFilter>();
             newMeshToSave.GetComponent<MeshFilter>().sharedMesh = _mesh;
             newMeshToSave.AddComponent<MeshRenderer>();
+            newMeshToSave.GetComponent<MeshRenderer>().materials = materials;
             newMeshToSave.GetComponent<MeshRenderer>().sharedMaterial = selected.GetComponent<MeshRenderer>().sharedMaterial;
 
             /* Begin to set up the LOD aspect */
@@ -277,6 +276,12 @@ public class FV_Collapse : EditorWindow
                 newMeshToSave.name = $"{tempName}_coreMesh_LOD0";
             }
 
+            // add the FV Items script 
+            go.AddComponent<FV_Items>();
+            // and set it
+            go.GetComponent<FV_Items>().category = FV_Items.Category.Optimized;
+            go.GetComponent<FV_Items>().itemName = currentFVItem ? currentFVItem.itemName : (changeName) ? "Opt_" + newName : "Opt_" + selected.name;
+
 
 
             string prefabPath = "";
@@ -296,6 +301,7 @@ public class FV_Collapse : EditorWindow
 
         return false;
     }
+
 
 
     private void ResetSelectedTransform(GameObject selectedObject)
