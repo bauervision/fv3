@@ -10,22 +10,6 @@ namespace ForestVision.FV_TreeEditor
 {
     public static class FV_edUtils
     {
-
-
-        public static void RandomAll()
-        {
-            Debug.Log("All Trees Randomized");
-        }
-        public static void NewTree()
-        {
-
-            GameObject FV_editor_Tree = new GameObject("FV_Tree");
-            FV_editor_Tree.transform.position = Vector3.zero;
-            FV_editor_Tree.AddComponent<FV_Tree>();
-        }
-
-
-
         public static List<T> GetAssetsWithScript<T>(string path) where T : MonoBehaviour
         {
             T tmp;
@@ -56,9 +40,6 @@ namespace ForestVision.FV_TreeEditor
             }
             return enumList;
         }
-
-
-
 
     }
 }

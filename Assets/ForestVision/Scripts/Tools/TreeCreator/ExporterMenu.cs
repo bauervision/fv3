@@ -36,19 +36,19 @@ namespace UnityFBXExporter
     public class ExporterMenu : Editor
     {
 
-        [MenuItem("Tools/ForestVision/FBX Exporter/Only GameObject", false, 31)]
+        [MenuItem("Tools/ForestVision/Tools//FBX Exporter/Only GameObject", false, 31)]
         public static void ExportGameObjectToFBX()
         {
             ExportCurrentGameObject(false, false);
         }
 
-        [MenuItem("Tools/ForestVision/FBX Exporter/With new Materials", false, 32)]
+        [MenuItem("Tools/ForestVision/Tools/FBX Exporter/With new Materials", false, 32)]
         public static void ExportGameObjectAndMaterialsToFBX()
         {
             ExportCurrentGameObject(true, false);
         }
 
-        [MenuItem("Tools/ForestVision/FBX Exporter/With new Materials and Textures", false, 33)]
+        [MenuItem("Tools/ForestVision/Tools/FBX Exporter/With new Materials and Textures", false, 33)]
         public static void ExportGameObjectAndMaterialsTexturesToFBX()
         {
             ExportCurrentGameObject(true, true);

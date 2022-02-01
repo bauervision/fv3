@@ -9,9 +9,6 @@ public class FV_Tools : EditorWindow
 
     public static FV_Tools instance;
     private int guiSpace = 20;
-    //static private string prefabPath = "Assets/ForestVision/FV_Items/Trees/";
-    //static private string optimizedPath = "Assets/ForestVision/FV_Items/Optimized/";
-
 
     public static void ShowEditor()
     {
@@ -49,13 +46,6 @@ public class FV_Tools : EditorWindow
         if (GUILayout.Button("New Optimized", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
         {
             FV_Collapse.ShowWindow();
-
-            // go.GetComponent<FV_Items>().category = FV_Items.Category.Optimized;
-            // go.GetComponent<FV_Items>().itemName = go.name;
-            // PrefabUtility.SaveAsPrefabAsset(Selection.activeGameObject, optimizedPath + go.name + ".prefab");
-            // FV_EditorWindow.InitContent();
-            // FV_EditorWindow.GeneratePreviews();
-
         }
 
         GUILayout.Space(guiSpace);
@@ -64,15 +54,7 @@ public class FV_Tools : EditorWindow
 
         if (GUILayout.Button("New Prefab", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
         {
-
             FV_Prefabber.ShowWindow();
-
-            // go.GetComponent<FV_Items>().category = FV_Items.Category.Trees;
-            // PrefabUtility.SaveAsPrefabAsset(Selection.activeGameObject, prefabPath + go.name + ".prefab");
-            // FV_EditorWindow.InitContent();
-            // FV_EditorWindow.GeneratePreviews();
-
-
         }
 
         GUILayout.Space(guiSpace);
@@ -126,17 +108,7 @@ public class FV_Tools : EditorWindow
         }
         GUILayout.Space(guiSpace);
 
-        if (GUILayout.Button("Reset Transform", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
-        {
-            var go = Selection.activeGameObject;
-            if (go == null)
-            {
-                if (EditorUtility.DisplayDialog("Heads Up", "Can't reset the transforms without something selected", "OK"))
-                    return;
-            }
-            FV_EditorWindow.ResetTransformOnSelected(go);
-        }
-        GUILayout.Space(guiSpace);
+
 
         GUILayout.EndVertical();
 
