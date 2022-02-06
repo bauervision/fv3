@@ -72,88 +72,66 @@ namespace ForestVision.FV_TreeEditor
         }
 
         #endregion
-        // =============================================================================
-        #region Prefab Tree Starter
-
-        [MenuItem("GameObject/3D Object/FV/Starter Kit/Prefab Tree", false, 30)]
-        private static void CreateTreePrefabBasic()
-        {
-            //Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("C1__Tree_5Arms", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
-        }
-
-        #endregion
-
-        // =============================================================================
-        #region Forest Group Starter
-
-        [MenuItem("GameObject/3D Object/FV/Starter Kit/Forest Group", false, 30)]
-        private static void CreateTreeOptimizedBasic()
-        {
-            // Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("C1__Tree_5Arms", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
-        }
-
-        #endregion
-
 
         #region Assets
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Trunk", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Trunk", false, 30)]
         private static void CreateStraightTrunkv1()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("_trunk_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Branch", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branch", false, 30)]
         private static void CreateBranchFoliageBasic1()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("foliage_basic_Branch_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Leaves", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Leaves", false, 30)]
         private static void CreateLeavesBasic()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("_Leaves_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Card Leaves", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Card Leaves", false, 30)]
         private static void CreateLeavesCard1()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("_Card_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Hi Plant", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Hi Plant", false, 30)]
         private static void CreateHiPlant()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("HP_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Grass", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Grass", false, 30)]
         private static void CreateGrass()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Grasses_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Flower", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Flower", false, 30)]
         private static void CreateFlowers()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Flowers_01", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Rock", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Rock", false, 30)]
         private static void CreateRocks()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Rocks_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Scatter", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Scatter", false, 30)]
         private static void CreateScatter()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("Scatter_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/FV/Assets/Woods Background", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Woods Background", false, 30)]
         private static void CreateBG()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("ThickWoods", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
