@@ -202,39 +202,27 @@ public class FV_SwitchMesh : EditorWindow
                         GUILayout.Label("Switch Mesh Option on Selected Only", EditorStyles.boldLabel);
 
                         string initialName = Selection.activeGameObject.transform.GetComponent<MeshFilter>().sharedMesh.name;
-
+                        string tempName = initialName.Remove(initialName.Length - 3);
+                        int initialMeshVersion = 0;
                         // hi res plants and grasses don't have species yet, so just handle mesh version
                         if (GetFoliageType("HP") || GetFoliageType("Grasses") || GetFoliageType("Flowers"))
                         {
                             string zeroedMeshVersion = meshVersion < 10 ? "0" + meshVersion.ToString() : meshVersion.ToString();
-                            int initialMeshVersion = int.Parse(zeroedMeshVersion);
-                            meshVersion = initialMeshVersion;
+                            initialMeshVersion = int.Parse(zeroedMeshVersion);
                         }
                         else // this mesh does have species versions
                         {
-
                             // // if this mesh has 10 or more options
                             if (GetFoliageType("Rocks") || GetFoliageType("_trunk"))
-                            {
-                                string zeroedMeshVersion = meshVersion < 10 ? "0" + meshVersion.ToString() : meshVersion.ToString();
-                                int initialMeshVersion = int.Parse(zeroedMeshVersion);
-                                meshVersion = initialMeshVersion;
-
-                            }
+                                initialMeshVersion = int.Parse(tempName.Substring(tempName.Length - 2));
                             else // has fewer than 10 options, don't need to worry with the zero
-                            {
-                                // bump off 3 characters so we are left with the version number
-                                string tempName = initialName.Remove(initialName.Length - 3);
-                                int initialMeshVersion = int.Parse(tempName.Last().ToString());
-                                //Debug.Log("initialMeshVersion: " + initialMeshVersion);
-                                meshVersion = initialMeshVersion;
-                            }
-
+                                initialMeshVersion = int.Parse(tempName.Last().ToString());
 
                         }
+
+                        meshVersion = initialMeshVersion;
                         //Debug.Log("Mesh count: " + GetFBXResourceMeshCount(Selection.activeGameObject));
                         meshVersion = (EditorGUILayout.IntSlider("Mesh Number", meshVersion, 1, GetFBXResourceMeshCount(Selection.activeGameObject)));
-                        //Debug.Log("updated MeshVersion: " + meshVersion);
                         SwitchMeshVersion(meshVersion);
                     }
 
