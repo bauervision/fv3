@@ -81,11 +81,37 @@ namespace ForestVision.FV_TreeEditor
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("_trunk_01_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
 
-        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branch", false, 30)]
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branches/Basic", false, 30)]
         private static void CreateBranchFoliageBasic1()
         {
             Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("foliage_basic_Branch_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
         }
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branches/Droopy", false, 30)]
+        private static void CreateBranchFoliageDroopy()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("foliage_droopy_Branch_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branches/Piney", false, 30)]
+        private static void CreateBranchFoliagePiney()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("foliage_pine_Branch_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branches/Thin", false, 30)]
+        private static void CreateBranchFoliageThin()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("foliage_thin_Branch_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branches/Veiny", false, 30)]
+        private static void CreateBranchFoliageVeiny()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("foliage_veiny_Branch_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+        [MenuItem("GameObject/3D Object/ForestVision/Assets/Branches/Wavy", false, 30)]
+        private static void CreateBranchFoliageWavy()
+        {
+            Selection.activeGameObject = PrefabUtility.InstantiatePrefab(Resources.Load("foliage_wavy_Branch_1_v1", typeof(GameObject)), (Selection.activeGameObject != null) ? Selection.activeGameObject.transform : null) as GameObject;
+        }
+
 
 
         [MenuItem("GameObject/3D Object/ForestVision/Assets/Leaves", false, 30)]
