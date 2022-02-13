@@ -48,7 +48,11 @@ namespace ForestVision.FV_TreeEditor
             FV_Renamer.ShowWindow();
         }
 
-
+        [MenuItem("Tools/ForestVision/Tools/Tweaker", false, 30)]//access to everything
+        private static void ShowToolTweaker()
+        {
+            FV_Tweaker.ShowWindow();
+        }
 
         [MenuItem("Tools/ForestVision/Tools/Screenshot", false, 30)]//access to everything
         private static void ShowToolScreenshot()
