@@ -71,8 +71,8 @@ public class FV_TreeTools : EditorWindow
 
     void OnGUI()
     {
-        GUILayout.ExpandWidth(false);
-        ;
+        //GUILayout.ExpandWidth(false);
+
         windowScroll = EditorGUILayout.BeginScrollView(windowScroll);
 
         GUILayout.Label("Tree Customizer", EditorStyles.boldLabel);
@@ -410,13 +410,7 @@ public class FV_TreeTools : EditorWindow
         EditorGUILayout.EndVertical();
         EditorGUILayout.Space();
         ///////////////////////////////////////////////////////////////////////////////////////
-        //EditorGUILayout.BeginVertical ("box");
-        //EditorGUILayout.Space ();
 
-        //EditorGUILayout.LabelField ("Tree Painter", EditorStyles.boldLabel);
-        //vertexSpawnBranch = EditorGUILayout.ObjectField(vertexSpawnBranch, typeof(GameObject), true);
-
-        //EditorGUILayout.EndVertical ();
         EditorGUILayout.EndScrollView();
 
     }

@@ -46,18 +46,24 @@ public class FV_SwapMat : EditorWindow
 
     private void CompareMatNamesAndSwapMaterial(GameObject sel)
     {
-        string[] compareString = matName.Split('_');
-        bool isSameMatCategory = sel.GetComponent<MeshRenderer>().sharedMaterial.name.Contains(compareString[0]);
-        if (isSameMatCategory)
-            SwapMat(sel);
+        if (sel.GetComponent<MeshRenderer>() != null)
+        {
+            string[] compareString = matName.Split('_');
+            bool isSameMatCategory = sel.GetComponent<MeshRenderer>().sharedMaterial.name.Contains(compareString[0]);
+            if (isSameMatCategory)
+                SwapMat(sel);
+        }
     }
 
     private void CompareMatNamesAndCount(GameObject sel)
     {
         string[] compareString = matName.Split('_');
-        bool isSameMatCategory = sel.GetComponent<MeshRenderer>().sharedMaterial.name.Contains(compareString[0]);
-        if (isSameMatCategory)
-            childCountWithSameMat++;
+        if (sel.GetComponent<MeshRenderer>() != null)
+        {
+            bool isSameMatCategory = sel.GetComponent<MeshRenderer>().sharedMaterial.name.Contains(compareString[0]);
+            if (isSameMatCategory)
+                childCountWithSameMat++;
+        }
     }
 
     private int GetMaterialCount()

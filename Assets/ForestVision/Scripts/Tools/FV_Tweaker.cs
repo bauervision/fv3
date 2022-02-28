@@ -18,10 +18,20 @@ public class FV_Tweaker : EditorWindow
     private float oldRotationAmount = 1;
     private float positionAmount = 1;
     private float oldPositionAmount = 1;
-
+    int randomAmount;
+    bool localSpace = false;
+    bool justScaleSelected = false;
+    bool justSelected = false;
     private bool tweakPosition;
     private bool tweakRotation;
-
+    public enum rotAxis
+    {
+        x,
+        y,
+        z
+    }
+    rotAxis curAxis = rotAxis.y;
+    private Vector2 windowScroll;
 
     public static void ShowWindow()
     {
@@ -35,28 +45,48 @@ public class FV_Tweaker : EditorWindow
 
     void OnGUI()
     {
+        windowScroll = EditorGUILayout.BeginScrollView(windowScroll);
         GUILayout.BeginVertical("box", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
 
         EditorGUILayout.Space();
         if (Selection.activeGameObject)
         {
-
-            // hi plants, grasses and flowers dont have species ...yet
             GUILayout.Label("Switch Species on Selected", EditorStyles.boldLabel);
-            //includeChildren = EditorGUILayout.Toggle("Include Children?", includeChildren);
-
-
-
 
             EditorGUILayout.Space();
+            Vector3 defaultScale = new Vector3(1, 1, 1);
+            if (Selection.activeGameObject.transform.localScale != defaultScale)
+                if (GUILayout.Button("Reset Transform?", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true)))
+                {
+
+                    GameObject newParent = new GameObject("_" + Selection.activeGameObject.name);
+                    // parent the new go to the selection
+                    newParent.transform.parent = Selection.activeGameObject.transform;
+                    // zero its position
+                    newParent.transform.localPosition = Vector3.zero;
+                    // unparent
+                    newParent.transform.parent = null;
+                    // make sure its scale is reset
+                    newParent.transform.localScale = defaultScale;
+                    Selection.activeGameObject.transform.parent = newParent.transform;
+                    // select the new object
+                    Selection.activeGameObject = newParent;
+                }
+            EditorGUILayout.Space();
+
+            EditorGUILayout.Space();
+
+            #region Hierarchy Selections
 
             GUILayout.Label("Heirarchy Selctions", EditorStyles.boldLabel);
             // Handle Parent selection options
             bool hasParent = Selection.activeGameObject.transform.parent != null;
+            EditorGUILayout.BeginHorizontal();
             if (hasParent)
             {
+
                 EditorGUILayout.Space();
-                if (GUILayout.Button("Select Parent?", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
+                if (GUILayout.Button("Select Parent?", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true)))
                     Selection.activeGameObject = Selection.activeGameObject.transform.parent.gameObject;
 
                 EditorGUILayout.Space();
@@ -67,7 +97,7 @@ public class FV_Tweaker : EditorWindow
             if (hasChildren)
             {
                 EditorGUILayout.Space();
-                if (GUILayout.Button("Select Children?", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
+                if (GUILayout.Button("Select Children?", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true)))
                 {
 
                     List<GameObject> children = new List<GameObject>();
@@ -85,6 +115,12 @@ public class FV_Tweaker : EditorWindow
                 EditorGUILayout.Space();
             }
 
+            EditorGUILayout.EndHorizontal();
+            #endregion
+
+            EditorGUILayout.Space();
+
+            #region Tweaker
             GUILayout.Label("Tweak", EditorStyles.boldLabel);
             tweakPosition = EditorGUILayout.Toggle("Tweak Position?", tweakPosition);
             if (tweakPosition)
@@ -116,13 +152,300 @@ public class FV_Tweaker : EditorWindow
 
             }
 
+            #endregion
+
+            EditorGUILayout.Space();
+
+            randomAmount = (int)EditorGUILayout.Slider("RandomAmount", randomAmount, 0, 90);
+
+
+            if (GUILayout.Button("Randomize Branches", GUILayout.MinHeight(40)))
+            {
+                RandomizeAllBranches();
+            }
+            EditorGUILayout.Space();
+
+            EditorGUILayout.LabelField("Rotate All Branches on the following axis:", EditorStyles.boldLabel);
+            EditorGUILayout.Space();
+            curAxis = (rotAxis)EditorGUILayout.EnumPopup("Rotation Axis:", curAxis);
+            justSelected = EditorGUILayout.Toggle("Rotate Just Selected", justSelected);
+            localSpace = EditorGUILayout.Toggle("Rotate in Local", localSpace);
+            EditorGUILayout.Space();
+
+            #region Rotations 1
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("+1"))
+            {
+                if (justSelected)
+                    RotateChildren(1, false, curAxis, localSpace);
+
+                RotateChildren(1, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("+5"))
+            {
+                if (justSelected)
+                    RotateChildren(5, false, curAxis, localSpace);
+
+                RotateChildren(5, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("+10"))
+            {
+                if (justSelected)
+                    RotateChildren(10, false, curAxis, localSpace);
+
+                RotateChildren(10, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("+45"))
+            {
+                if (justSelected)
+                    RotateChildren(45, false, curAxis, localSpace);
+
+                RotateChildren(45, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("+90"))
+            {
+                if (justSelected)
+                    RotateChildren(90, false, curAxis, localSpace);
+
+                RotateChildren(90, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("+180"))
+            {
+                if (justSelected)
+                    RotateChildren(180, false, curAxis, localSpace);
+
+                RotateChildren(180, true, curAxis, localSpace);
+            }
+            EditorGUILayout.EndHorizontal();
+            #endregion
+
+            #region Rotations 2
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("-1"))
+            {
+                if (justSelected)
+                    RotateChildren(-1, false, curAxis, localSpace);
+
+                RotateChildren(-1, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("-5"))
+            {
+                if (justSelected)
+                    RotateChildren(-5, false, curAxis, localSpace);
+
+                RotateChildren(-5, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("-10"))
+            {
+                if (justSelected)
+                    RotateChildren(-10, false, curAxis, localSpace);
+
+                RotateChildren(-10, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("-45"))
+            {
+                if (justSelected)
+                    RotateChildren(-45, false, curAxis, localSpace);
+
+                RotateChildren(-45, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("-90"))
+            {
+                if (justSelected)
+                    RotateChildren(-90, false, curAxis, localSpace);
+
+                RotateChildren(-90, true, curAxis, localSpace);
+            }
+            if (GUILayout.Button("-180"))
+            {
+                if (justSelected)
+                    RotateChildren(-180, false, curAxis, localSpace);
+
+                RotateChildren(-180, true, curAxis, localSpace);
+            }
+            EditorGUILayout.EndHorizontal();
+
+            #endregion
+
+            EditorGUILayout.Space();
+            EditorGUIUtility.labelWidth = 130;
+            EditorGUILayout.LabelField("Scale All Branches Uniformly:", EditorStyles.boldLabel);
+            EditorGUILayout.Space();
+            justScaleSelected = EditorGUILayout.Toggle("Scale Just Selected", justScaleSelected);
+
+            #region Scaling
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("0.25"))
+            {
+                if (justScaleSelected)
+                    ScaleAllBranches(0.25f, false);
+
+                ScaleAllBranches(0.25f, true);
+            }
+            if (GUILayout.Button("0.5"))
+            {
+                if (justScaleSelected)
+                    ScaleAllBranches(0.5f, false);
+
+                ScaleAllBranches(0.5f, true);
+            }
+            if (GUILayout.Button("0.9"))
+            {
+                if (justScaleSelected)
+                    ScaleAllBranches(0.9f, false);
+
+                ScaleAllBranches(0.9f, true);
+            }
+            if (GUILayout.Button("1.1"))
+            {
+                if (justScaleSelected)
+                    ScaleAllBranches(1.1f, false);
+
+                ScaleAllBranches(1.1f, true);
+            }
+            if (GUILayout.Button("1.25"))
+            {
+                if (justScaleSelected)
+                    ScaleAllBranches(1.25f, false);
+
+                ScaleAllBranches(1.25f, true);
+            }
+            if (GUILayout.Button("1.5"))
+            {
+                if (justScaleSelected)
+                    ScaleAllBranches(1.5f, false);
+
+                ScaleAllBranches(1.5f, true);
+            }
+            EditorGUILayout.EndHorizontal();
+
+            #endregion
+
+
+
+
+
+
+
+
+
+
         }
         else
         {
             GUILayout.Label("Select something to see your options", EditorStyles.boldLabel);
         }
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndScrollView();
+    }
+
+
+    void ScaleAllBranches(float scaleAmount, bool children)
+    {
+        Vector3 newScale;
+
+        //if(children){
+        foreach (GameObject g in Selection.gameObjects)
+        {
+            for (int i = 0; i < g.transform.childCount; i++)
+            {
+                newScale.x = scaleAmount; newScale.y = scaleAmount; newScale.z = scaleAmount;
+                g.transform.GetChild(i).localScale = Vector3.Scale((new Vector3(newScale.x, newScale.y, newScale.z)), g.transform.GetChild(i).localScale);
+
+            }
+
+        }
 
     }
+
+    private void RotateChildren(float deg, bool children, rotAxis axis, bool space)
+    {
+        if (children)
+        {
+            foreach (GameObject g in Selection.gameObjects)
+            {
+                for (int i = 0; i < g.transform.childCount; i++)
+                {
+                    switch ((int)axis)
+                    {
+                        case 0:
+                            if (space)
+                            {
+                                g.transform.GetChild(i).Rotate(deg, 0, 0, Space.Self);
+                            }
+                            else
+                            {
+                                g.transform.GetChild(i).Rotate(deg, 0, 0, Space.World);
+                            }
+                            break;
+                        case 1:
+                            if (space)
+                            {
+                                g.transform.GetChild(i).Rotate(0, deg, 0, Space.Self);
+                            }
+                            else
+                            {
+                                g.transform.GetChild(i).Rotate(0, deg, 0, Space.World);
+                            }
+                            break;
+                        case 2:
+                            if (space)
+                            {
+                                g.transform.GetChild(i).Rotate(0, 0, deg, Space.Self);
+                            }
+                            else
+                            {
+                                g.transform.GetChild(i).Rotate(0, 0, deg, Space.World);
+                            }
+                            break;
+
+                    }
+
+                }
+
+            }
+        }
+        else
+        {
+            switch ((int)axis)
+            {
+                case 0:
+                    if (space)
+                    {
+                        Selection.activeGameObject.transform.Rotate(deg, 0, 0, Space.Self);
+                    }
+                    else
+                    {
+                        Selection.activeGameObject.transform.Rotate(deg, 0, 0, Space.World);
+                    }
+                    break;
+                case 1:
+                    if (space)
+                    {
+                        Selection.activeGameObject.transform.Rotate(0, deg, 0, Space.Self);
+                    }
+                    else
+                    {
+                        Selection.activeGameObject.transform.Rotate(0, deg, 0, Space.World);
+                    }
+                    break;
+                case 2:
+                    if (space)
+                    {
+                        Selection.activeGameObject.transform.Rotate(0, 0, deg, Space.Self);
+                    }
+                    else
+                    {
+                        Selection.activeGameObject.transform.Rotate(0, 0, deg, Space.World);
+                    }
+                    break;
+
+            }
+            Selection.activeGameObject.transform.Rotate(0, deg, 0, Space.Self);
+        }
+    }
+
+
 
 
     void RePosition(float offset)
@@ -172,97 +495,6 @@ public class FV_Tweaker : EditorWindow
 
     }
 
-    /*
-        private void RotateChildren(float deg, bool children, rotAxis axis, bool space)
-        {
-            if (children)
-            {
-                foreach (GameObject g in Selection.gameObjects)
-                {
-                    for (int i = 0; i < g.transform.childCount; i++)
-                    {
-                        if (g.transform.GetChild(i).name.EndsWith("FVbranch"))
-                        {
-                            switch ((int)axis)
-                            {
-                                case 0:
-                                    if (space)
-                                    {
-                                        g.transform.GetChild(i).Rotate(deg, 0, 0, Space.Self);
-                                    }
-                                    else
-                                    {
-                                        g.transform.GetChild(i).Rotate(deg, 0, 0, Space.World);
-                                    }
-                                    break;
-                                case 1:
-                                    if (space)
-                                    {
-                                        g.transform.GetChild(i).Rotate(0, deg, 0, Space.Self);
-                                    }
-                                    else
-                                    {
-                                        g.transform.GetChild(i).Rotate(0, deg, 0, Space.World);
-                                    }
-                                    break;
-                                case 2:
-                                    if (space)
-                                    {
-                                        g.transform.GetChild(i).Rotate(0, 0, deg, Space.Self);
-                                    }
-                                    else
-                                    {
-                                        g.transform.GetChild(i).Rotate(0, 0, deg, Space.World);
-                                    }
-                                    break;
-
-                            }
-                        }
-                    }
-
-                }
-            }
-            else
-            {
-                switch ((int)axis)
-                {
-                    case 0:
-                        if (space)
-                        {
-                            Selection.activeGameObject.transform.Rotate(deg, 0, 0, Space.Self);
-                        }
-                        else
-                        {
-                            Selection.activeGameObject.transform.Rotate(deg, 0, 0, Space.World);
-                        }
-                        break;
-                    case 1:
-                        if (space)
-                        {
-                            Selection.activeGameObject.transform.Rotate(0, deg, 0, Space.Self);
-                        }
-                        else
-                        {
-                            Selection.activeGameObject.transform.Rotate(0, deg, 0, Space.World);
-                        }
-                        break;
-                    case 2:
-                        if (space)
-                        {
-                            Selection.activeGameObject.transform.Rotate(0, 0, deg, Space.Self);
-                        }
-                        else
-                        {
-                            Selection.activeGameObject.transform.Rotate(0, 0, deg, Space.World);
-                        }
-                        break;
-
-                }
-                Selection.activeGameObject.transform.Rotate(0, deg, 0, Space.Self);
-            }
-        }
-
-    */
     public void LoopThroughChildren(GameObject currentGameObj)
     {
 
@@ -295,6 +527,16 @@ public class FV_Tweaker : EditorWindow
         }
     }
 
+
+    void RandomizeAllBranches()
+    {
+        foreach (GameObject g in Selection.gameObjects)
+            for (int i = 0; i < g.transform.childCount; i++)
+                g.transform.GetChild(i).Rotate(UnityEngine.Random.Range(-randomAmount, randomAmount),
+                    UnityEngine.Random.Range(-randomAmount, randomAmount),
+                    UnityEngine.Random.Range(-randomAmount, randomAmount),
+                    Space.Self);
+    }
 
 
 

@@ -27,6 +27,7 @@ public class FV_SwitchMesh : EditorWindow
     const int flowerSpeciesCount = 0;
     const int rockrSpeciesCount = 4;
     const int scatterSpeciesCount = 8;
+    const int spruceSpeciesCount = 4;
 
 
     const int foliageOptionsCount = 8;
@@ -38,8 +39,9 @@ public class FV_SwitchMesh : EditorWindow
     const int flowerOptionsCount = 21;
     const int rockrOptionsCount = 11;
     const int scatterOptionsCount = 7;
+    const int spruceOptionsCount = 8;
 
-    string[] resourceString = new string[] { "_FoliageBranches", "_BaseFoliage", "_Trunks", "_HighPlants", "_Grasses", "_Flowers", "_Rocks", "_Scatter" };
+    string[] resourceString = new string[] { "_FoliageBranches", "_BaseFoliage", "_Trunks", "_HighPlants", "_Grasses", "_Flowers", "_Rocks", "_Scatter", "_Spruce" };
 
 
     public static void ShowWindow()
@@ -92,7 +94,7 @@ public class FV_SwitchMesh : EditorWindow
                     if (hasParent)
                     {
                         EditorGUILayout.Space();
-                        if (GUILayout.Button("Select Parent?", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
+                        if (GUILayout.Button("Select Parent?", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true)))
                             Selection.activeGameObject = Selection.activeGameObject.transform.parent.gameObject;
 
                         EditorGUILayout.Space();
@@ -103,7 +105,7 @@ public class FV_SwitchMesh : EditorWindow
                     if (hasChildren)
                     {
                         EditorGUILayout.Space();
-                        if (GUILayout.Button("Select Children?", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true)))
+                        if (GUILayout.Button("Select Children?", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true)))
                         {
 
                             List<GameObject> children = new List<GameObject>();
@@ -190,6 +192,12 @@ public class FV_SwitchMesh : EditorWindow
                         GUILayout.Label("Scatter detected, additonal species available", EditorStyles.wordWrappedLabel);
                         EditorGUILayout.Space();
                     }
+                    else if (GetFoliageType("Spruce"))
+                    {
+                        EditorGUILayout.Space();
+                        GUILayout.Label("Spruce detected, additonal species available", EditorStyles.wordWrappedLabel);
+                        EditorGUILayout.Space();
+                    }
                     else
                     {
                         GUILayout.Label("No Options for this FV Mesh...yet", EditorStyles.label);
@@ -239,18 +247,21 @@ public class FV_SwitchMesh : EditorWindow
             GUILayout.Label("Select something to see your options", EditorStyles.boldLabel);
         }
 
+        GUILayout.EndVertical();
     }
 
     private bool isForestVisionMesh()
     {
-        return (GetFoliageType("Scatter") || GetFoliageType("_Leaves") || GetFoliageType("_Card") || GetFoliageType("foliage") || GetFoliageType("_leaves") || GetFoliageType("_trunk") || GetFoliageType("HP") || GetFoliageType("Grasses") || GetFoliageType("Flowers") || GetFoliageType("Rocks"));
+        return (GetFoliageType("Spruce") || GetFoliageType("Scatter") || GetFoliageType("_Leaves") || GetFoliageType("_Card") || GetFoliageType("foliage") || GetFoliageType("_leaves") || GetFoliageType("_trunk") || GetFoliageType("HP") || GetFoliageType("Grasses") || GetFoliageType("Flowers") || GetFoliageType("Rocks"));
     }
 
 
     ///<summary>Check to see if the passed string matches what the meshfilter mesh name starts with. </summary>
     private bool GetFoliageType(string nameCompare)
     {
-        return Selection.activeGameObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith(nameCompare);
+        if (Selection.activeGameObject.transform.GetComponent<MeshFilter>() != null)
+            return Selection.activeGameObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith(nameCompare);
+        else return false;
     }
 
     private bool GetFoliageTypeOfParent(string nameCompare)
@@ -280,10 +291,17 @@ public class FV_SwitchMesh : EditorWindow
             if (oldMeshName != newMeshName)
             {
                 // as long as the swap mesh is different , swap it
-                foreach (Mesh mesh in fbxMeshes)
-                    // run through and find the source mesh we want to switch with
-                    if (mesh.name == newMeshName)// if we find the name of what we want to swap with in the fbx file
-                        mf.sharedMesh = mesh;// swap meshes
+                if (fbxMeshes != null)
+                {
+                    foreach (Mesh mesh in fbxMeshes)
+                        // run through and find the source mesh we want to switch with
+                        if (mesh.name == newMeshName)// if we find the name of what we want to swap with in the fbx file
+                            mf.sharedMesh = mesh;// swap meshes
+                }
+                else
+                {
+
+                }
             }
 
 
@@ -330,11 +348,22 @@ public class FV_SwitchMesh : EditorWindow
             // store the name of this current mesh
             oldMeshName = mf.sharedMesh.name;
             newMeshName = ProcessNewName(resourceIndex, mf);
-            //            Debug.Log("NewName " + newMeshName);
             if (oldMeshName != newMeshName) // as long as the swap mesh is different, swap it
-                foreach (Mesh mesh in fbxMeshes)// run through and find the source mesh we want to switch with
-                    if (mesh.name == newMeshName)// if we find the name of what we want to swap with in the fbx file
-                        mf.sharedMesh = mesh;// swap meshes
+                if (fbxMeshes != null)
+                    foreach (Mesh mesh in fbxMeshes)// run through and find the source mesh we want to switch with
+                        if (mesh.name == newMeshName)// if we find the name of what we want to swap with in the fbx file
+                            mf.sharedMesh = mesh;// swap meshes
+        }
+        else
+        {
+            //this object doesnt have a mesh filter so lets see if it has any children
+            if (thisGameObject.transform.childCount > 0)
+            {
+                // collect all of its children
+                Transform[] allKids = thisGameObject.transform.GetComponentsInChildren<Transform>();
+                foreach (Transform kid in allKids)
+                    SwitchMesh(kid.gameObject, newVersion);
+            }
         }
 
         // now check to see if this is a foliage mesh, which means we also will need to update the leaves mesh child IF there is one
@@ -409,7 +438,7 @@ public class FV_SwitchMesh : EditorWindow
         string newName;
 
         // foliage cases
-        if (resourceIndex < 2)
+        if (resourceIndex < 2 || resourceIndex == 8)
         {
             newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 4) + meshVersion.ToString() + "_v" + currentSpeciesVersion;
         }
@@ -419,6 +448,7 @@ public class FV_SwitchMesh : EditorWindow
             newName = meshFilter.sharedMesh.name.Remove(meshFilter.sharedMesh.name.Length - 5) + zeroedMeshVersion + "_v" + currentSpeciesVersion;
 
         }
+
 
         else// everything else
         {
@@ -431,41 +461,52 @@ public class FV_SwitchMesh : EditorWindow
 
     private Mesh[] GetFBXSource(GameObject selObject)
     {
-        return Resources.LoadAll<Mesh>(resourceString[GetFBXResourceID(selObject)]);
+        if (GetFBXResourceID(selObject) != -1)
+            return Resources.LoadAll<Mesh>(resourceString[GetFBXResourceID(selObject)]);
+        else
+            return null;
     }
 
     private int GetFBXResourceID(GameObject selObject)
     {
-        bool leavesMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_L");
-        bool cardMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_Card");
-        if (leavesMesh || cardMesh)
-            return 1;
+        if (selObject.transform.GetComponent<MeshFilter>() != null)
+        {
+            bool leavesMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_L");
+            bool cardMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_Card");
+            if (leavesMesh || cardMesh)
+                return 1;
 
-        bool trunkMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_trunk");
-        if (trunkMesh)
-            return 2;
+            bool trunkMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_trunk");
+            if (trunkMesh)
+                return 2;
 
-        bool hiPlantMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("HP");
-        if (hiPlantMesh)
-            return 3;
+            bool hiPlantMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("HP");
+            if (hiPlantMesh)
+                return 3;
 
-        bool grassMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Grass");
-        if (grassMesh)
-            return 4;
+            bool grassMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Grass");
+            if (grassMesh)
+                return 4;
 
-        bool flowerMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Flowers");
-        if (flowerMesh)
-            return 5;
+            bool flowerMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Flowers");
+            if (flowerMesh)
+                return 5;
 
-        bool rockMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Rocks");
-        if (rockMesh)
-            return 6;
+            bool rockMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Rocks");
+            if (rockMesh)
+                return 6;
 
-        bool scatterMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Scatter");
-        if (scatterMesh)
-            return 7;
+            bool scatterMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Scatter");
+            if (scatterMesh)
+                return 7;
 
-        return 0;// foliage
+            bool spruceMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Spruce");
+            if (spruceMesh)
+                return 8;
+
+            return 0;// foliage
+        }
+        return -1;
     }
 
     private int GetSpeciesCount(GameObject selObject)
@@ -502,10 +543,18 @@ public class FV_SwitchMesh : EditorWindow
         if (scatterMesh)
             return scatterSpeciesCount;
 
+        bool spruceMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Spruce");
+        if (spruceMesh)
+            return spruceSpeciesCount;
+
         return foliageSpeciesCount;
     }
     private int GetFBXResourceMeshCount(GameObject selObject)
     {
+        bool spruceMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("Spruce");
+        if (spruceMesh)
+            return spruceOptionsCount;
+
         bool leavesMesh = selObject.transform.GetComponent<MeshFilter>().sharedMesh.name.StartsWith("_L");
         if (leavesMesh)
             return leavesOptionsCount;
