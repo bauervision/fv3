@@ -15,6 +15,7 @@ public class FV_Collapse : EditorWindow
     private string tempName = "_optimized";
     private List<GameObject> childrenOfTree = new List<GameObject>();
     private string optimizedPath = "Assets/ForestVision/Optimized";
+    private string optimizedMeshPath = "Assets/ForestVision/Optimized/Meshes";
     string placeholder = string.Empty;
 
 
@@ -229,9 +230,9 @@ public class FV_Collapse : EditorWindow
             Mesh _mesh = new Mesh();
             string path = "";
             if (changeName)
-                path = optimizedPath + "/" + newName + ".asset";
+                path = optimizedMeshPath + "/" + newName + ".asset";
             else
-                path = optimizedPath + "/" + selected.name + ".asset";
+                path = optimizedMeshPath + "/" + selected.name + ".asset";
 
             AssetDatabase.CreateAsset(selected.GetComponent<MeshFilter>().sharedMesh, path);
 

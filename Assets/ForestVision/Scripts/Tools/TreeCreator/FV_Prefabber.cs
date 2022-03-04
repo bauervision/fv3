@@ -38,6 +38,26 @@ public class FV_Prefabber : EditorWindow
         }
         else if (Selection.activeGameObject)
         {
+            EditorGUILayout.Space();
+            Vector3 defaultScale = new Vector3(1, 1, 1);
+            if (Selection.activeGameObject.transform.localScale != defaultScale)
+                if (GUILayout.Button("Reset Transform?", GUILayout.ExpandHeight(false), GUILayout.ExpandWidth(true)))
+                {
+                    GameObject newParent = new GameObject("_" + Selection.activeGameObject.name);
+                    // parent the new go to the selection
+                    newParent.transform.parent = Selection.activeGameObject.transform;
+                    // zero its position
+                    newParent.transform.localPosition = Vector3.zero;
+                    // unparent
+                    newParent.transform.parent = null;
+                    // make sure its scale is reset
+                    newParent.transform.localScale = defaultScale;
+                    Selection.activeGameObject.transform.parent = newParent.transform;
+                    // select the new object
+                    Selection.activeGameObject = newParent;
+                }
+            EditorGUILayout.Space();
+
             tempName = Selection.activeGameObject.name;
             EditorGUILayout.LabelField(tempName, EditorStyles.miniLabel);
         }

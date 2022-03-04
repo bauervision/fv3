@@ -7,7 +7,7 @@ namespace ForestVision.FV_TreeEditor
 #if UNITY_EDITOR
         public enum Category
         {
-            Backgrounds, Branches, Flora, Ground, LowPoly, Mobile, Optimized, Specials, Trees, Trunks, Vines
+            Backgrounds, Branches, Flora, Ground, LowPoly, Mobile, Optimized, Specials, TreesYoung, Trees, TreesOld, Trunks, Vines
         }
 
         public Category category = Category.Trunks;
